@@ -1,4 +1,6 @@
-import { COLONNES } from './constantes.js';
+import Plateau from './jeu/Plateau.js';
 
 console.log('app démarrée');
-console.log('Grille :', COLONNES, 'colonnes');
+
+const plateau = new Plateau(document.getElementById('app'));
+console.log('Plateau créé — cellules ligne 0 :', plateau.cellules[0].length);

@@ -1,0 +1,134 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Couleurs */
+  --couleur-fond:          #0d0d1a;
+  --couleur-surface:       #16213e;
+  --couleur-surface-hover: #1e2d50;
+  --couleur-bordure:       #2a3a5c;
+  --couleur-accent:        #4f8ef7;
+  --couleur-accent-hover:  #6fa4ff;
+  --couleur-texte:         #e8eaf0;
+  --couleur-texte-subtil:  #8892a4;
+  --couleur-danger:        #e94560;
+  --couleur-succes:        #2ecc71;
+
+  /* Typographie */
+  --police-principale: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --taille-texte-base: 1rem;
+  --taille-texte-sm:   0.875rem;
+  --taille-texte-lg:   1.125rem;
+  --taille-texte-xl:   1.5rem;
+  --taille-texte-2xl:  2rem;
+
+  /* Espacement */
+  --espace-xs:   0.25rem;
+  --espace-sm:   0.5rem;
+  --espace-md:   1rem;
+  --espace-lg:   1.5rem;
+  --espace-xl:   2rem;
+  --espace-2xl:  3rem;
+
+  /* Bordures */
+  --rayon-sm:  0.25rem;
+  --rayon-md:  0.5rem;
+  --rayon-lg:  1rem;
+
+  /* Transitions */
+  --transition-rapide:  150ms ease;
+  --transition-normale: 250ms ease;
+}
+
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--police-principale);
+  font-size: var(--taille-texte-base);
+  color: var(--couleur-texte);
+  background-color: var(--couleur-fond);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espace-sm) var(--espace-lg);
+  border: none;
+  border-radius: var(--rayon-md);
+  font-family: inherit;
+  font-size: var(--taille-texte-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-rapide),
+              transform var(--transition-rapide);
+  text-decoration: none;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--primaire {
+  background-color: var(--couleur-accent);
+  color: #fff;
+}
+
+.btn--primaire:hover {
+  background-color: var(--couleur-accent-hover);
+}
+
+.btn--secondaire {
+  background-color: var(--couleur-surface);
+  color: var(--couleur-texte);
+  border: 1px solid var(--couleur-bordure);
+}
+
+.btn--secondaire:hover {
+  background-color: var(--couleur-surface-hover);
+}
+
+.btn--profils {
+  background-color: transparent;
+  color: var(--couleur-texte-subtil);
+  border: 1px solid var(--couleur-bordure);
+  font-size: var(--taille-texte-sm);
+}
+
+.btn--profils:hover {
+  color: var(--couleur-texte);
+  border-color: var(--couleur-accent);
+}
+
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}

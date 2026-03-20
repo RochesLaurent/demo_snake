@@ -1,13 +1,24 @@
-# demo_snake
+# PlaygroundJS
 
-Jeu Snake développé en Vanilla JS / HTML / CSS, **sans `<canvas>`**, dans le cadre d'un projet d'étude.
+Collection de mini-jeux développés en **Vanilla JS / HTML / CSS**, sans framework ni bibliothèque externe. Projet d'étude orienté pédagogie : POO, principes SOLID, Clean Code.
 
-## Fonctionnalités
+## Jeux disponibles
 
-- Jouer au Snake avec contrôle au clavier
-- Créer et gérer plusieurs profils joueurs
-- Scores enregistrés localement (localStorage)
-- Tableau comparatif des scores entre profils
+| Jeu | Phase | État |
+|-----|-------|------|
+| Snake | 1 | En cours |
+| Memory | 2 | À venir |
+| Jeu de la Vie | 3 | À venir |
+| Sokoban | 4 | À venir |
+| Démineur | 5 | À venir |
+| Puissance 4 | 6 | À venir |
+| Tetris | 7 | À venir |
+
+## Fonctionnalités transversales
+
+- Naviguer entre les jeux via un écran d'accueil
+- Créer et gérer plusieurs profils joueurs (partagés entre tous les jeux)
+- Enregistrer et comparer les scores entre profils et entre jeux (localStorage)
 
 ## Stack technique
 
@@ -41,44 +52,59 @@ vercel --prod # déploiements suivants
 ### Structure des fichiers
 
 ```
-demo_snake/
+PlaygroundJS/
 ├── index.html
 ├── css/
-│   └── style.css
-└── js/
-    ├── main.js                      # Point d'entrée — instancie et lance l'application
-    ├── constantes.js                # Toutes les constantes nommées (taille grille, vitesse…)
-    ├── jeu/
-    │   ├── Jeu.js                   # Orchestrateur principal du jeu
-    │   ├── BoucleDeJeu.js           # Boucle de jeu (setInterval / requestAnimationFrame)
-    │   ├── Plateau.js               # Rendu DOM de la grille
-    │   ├── Serpent.js               # Entité serpent (position, direction, croissance)
-    │   ├── Nourriture.js            # Entité nourriture (position aléatoire)
-    │   └── DetecteurDeCollision.js  # Détection collisions (murs, soi-même, nourriture)
-    ├── profil/
-    │   ├── Profil.js                # Modèle de données d'un profil joueur
-    │   └── GestionnaireProfils.js   # CRUD profils (création, sélection, suppression)
-    ├── score/
-    │   ├── Score.js                 # Modèle de données d'un score
-    │   └── DepotScores.js           # Unique point d'accès au localStorage
-    └── ui/
-        ├── MenuUI.js                # Écran d'accueil et sélection de profil
-        ├── JeuUI.js                 # HUD en cours de partie (score, niveau)
-        └── TableauScoresUI.js       # Affichage et comparaison des scores
+│   ├── commun.css                      # Reset, variables CSS, layout partagé
+│   ├── accueil.css                     # Écran d'accueil (grille de cartes)
+│   └── jeux/
+│       ├── snake.css
+│       └── ...
+├── js/
+│   ├── main.js                         # Point d'entrée — bootstrap du shell
+│   ├── commun/
+│   │   ├── constantes.js               # Constantes globales (préfixe storage, états, routes)
+│   │   ├── Routeur.js                  # Routeur SPA hash-based
+│   │   ├── InterfaceJeu.js             # Contrat / classe de base pour chaque jeu
+│   │   ├── DepotLocal.js               # Wrapper localStorage avec namespace
+│   │   └── GestionnaireVues.js         # Montage/démontage des vues dans #app
+│   ├── accueil/
+│   │   └── AccueilUI.js                # Écran d'accueil (grille de cartes jeux)
+│   ├── profil/
+│   │   ├── Profil.js                   # Modèle de données profil joueur
+│   │   └── GestionnaireProfils.js      # CRUD profils (partagé entre tous les jeux)
+│   ├── score/
+│   │   ├── Score.js                    # Modèle de données score (avec champ jeuId)
+│   │   └── DepotScores.js              # Accès localStorage scores (filtrable par jeuId)
+│   └── jeux/
+│       └── snake/                      # Jeu Snake (Phase 1)
 ```
+
+### Shell (Phase 0)
+
+Le shell est le socle commun à tous les jeux :
+
+- **Routeur SPA** — navigation hash-based (`#accueil`, `#snake`, etc.)
+- **InterfaceJeu** — contrat de cycle de vie que chaque jeu implémente (`initialiser`, `demarrer`, `mettreEnPause`, `reprendre`, `arreter`, `detruire`)
+- **DepotLocal** — wrapper `localStorage` avec namespace automatique (`playground_global_*`, `playground_{jeuId}_*`)
+- **GestionnaireVues** — montage et démontage des vues sans fuite mémoire
+- **AccueilUI** — grille de cartes cliquables vers chaque jeu
 
 ### Rendu DOM (sans canvas)
 
-La grille est un tableau 2D de `<div class="cellule">`. Les états visuels sont portés par des classes CSS (`cellule--serpent`, `cellule--nourriture`). À chaque tick du jeu, seules les classes sont modifiées — les éléments DOM ne sont jamais recréés.
+La grille de chaque jeu (sauf Tetris) est un tableau 2D de `<div class="cellule">`. Les états visuels sont portés par des classes CSS scopées (ex : `.jeu-snake .cellule--serpent`). À chaque tick, seules les classes sont modifiées — les éléments DOM ne sont jamais recréés.
+
+**Exception :** Tetris utilise un `<canvas>` pour le rendu.
 
 ### Persistance
 
-Seule la classe `DepotScores.js` accède au `localStorage`.
+L'accès au `localStorage` est encapsulé par `DepotLocal` avec un système de namespace.
 
 | Clé | Contenu |
-|---|---|
-| `snake_profils` | JSON array des profils joueurs |
-| `snake_scores` | JSON array des scores avec référence au profil |
+|-----|---------|
+| `playground_global_profils` | JSON array des profils joueurs |
+| `playground_global_scores` | JSON array des scores (champ `jeuId` pour filtrer par jeu) |
+| `playground_{jeuId}_config` | Config spécifique à un jeu (si nécessaire) |
 
 ---
 
@@ -89,17 +115,18 @@ Seule la classe `DepotScores.js` accède au `localStorage`.
 | Principe | Application |
 |---|---|
 | **S** — Responsabilité unique | Chaque classe a un seul rôle (`Plateau` = rendu, `DetecteurDeCollision` = collisions…) |
-| **O** — Ouvert/Fermé | Extensions par héritage ou composition, sans modifier le code existant |
-| **L** — Substitution de Liskov | Toute sous-classe peut remplacer sa parente sans casser le comportement |
+| **O** — Ouvert/Fermé | Chaque jeu étend `InterfaceJeu` sans modifier le shell |
+| **L** — Substitution de Liskov | Tout jeu peut être utilisé par le routeur sans adaptation |
 | **I** — Ségrégation des interfaces | Pas de classes "fourre-tout" — plusieurs petites classes ciblées |
 | **D** — Inversion des dépendances | Les dépendances sont injectées via le constructeur |
 
 ### Clean Code
 
-- Noms explicites en français : `calculerProchainMouvement()` plutôt que `calc()`
-- Pas de magic numbers — constantes dans `constantes.js`
+- Noms explicites en français : `calculerProchaineMouvement()` plutôt que `calc()`
+- Pas de magic numbers — constantes dans les fichiers `constantes*.js`
 - Fonctions courtes (< 20 lignes), une seule responsabilité par fonction
 - Commenter le *pourquoi*, pas le *quoi*
+- Un fichier = une classe
 
 ---
 

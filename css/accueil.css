@@ -1,0 +1,90 @@
+.accueil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--espace-2xl) var(--espace-lg);
+  gap: var(--espace-2xl);
+}
+
+/* En-tête */
+
+.accueil__entete {
+  text-align: center;
+}
+
+.accueil__entete h1 {
+  font-size: var(--taille-texte-2xl);
+  color: var(--couleur-accent);
+  letter-spacing: 0.05em;
+  margin-bottom: var(--espace-sm);
+}
+
+.accueil__entete p {
+  color: var(--couleur-texte-subtil);
+  font-size: var(--taille-texte-lg);
+}
+
+/* Grille de jeux */
+
+.accueil__grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--espace-lg);
+  width: 100%;
+  max-width: 900px;
+}
+
+/* Carte de jeu */
+
+.carte-jeu {
+  background-color: var(--couleur-surface);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-lg);
+  padding: var(--espace-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espace-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-normale),
+              border-color var(--transition-normale),
+              transform var(--transition-normale);
+  text-align: center;
+  outline: none;
+}
+
+.carte-jeu:hover,
+.carte-jeu:focus {
+  background-color: var(--couleur-surface-hover);
+  border-color: var(--couleur-accent);
+  transform: translateY(-4px);
+}
+
+.carte-jeu:active {
+  transform: translateY(-1px);
+}
+
+.carte-jeu__icone {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.carte-jeu__nom {
+  font-size: var(--taille-texte-lg);
+  color: var(--couleur-texte);
+  margin: 0;
+}
+
+.carte-jeu__description {
+  font-size: var(--taille-texte-sm);
+  color: var(--couleur-texte-subtil);
+  line-height: 1.4;
+}
+
+/* Pied de page */
+
+.accueil__pied {
+  margin-top: auto;
+  padding-top: var(--espace-lg);
+}

@@ -34,6 +34,35 @@
   font-weight: 600;
 }
 
+.jeu-snake .hud__score-max {
+  color: var(--couleur-texte-subtil);
+  font-size: var(--taille-texte-sm);
+}
+
+.jeu-snake .hud__scores {
+  padding: var(--espace-xs);
+  background-color: transparent;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-rapide),
+              border-color var(--transition-rapide);
+}
+
+.jeu-snake .hud__scores:hover {
+  background-color: var(--couleur-surface-hover);
+  border-color: var(--couleur-accent);
+}
+
+.jeu-snake .hud__scores-icone {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
 .jeu-snake .hud__pause {
   padding: var(--espace-xs) var(--espace-sm);
   background-color: var(--couleur-surface-hover);
@@ -186,6 +215,26 @@
 .jeu-snake .overlay-fin .btn--menu:hover {
   background-color: var(--couleur-surface-hover);
   color: var(--couleur-texte);
+}
+
+.jeu-snake .overlay-fin__record {
+  color: var(--couleur-succes);
+  font-weight: 700;
+  font-size: var(--taille-texte-lg);
+}
+
+.jeu-snake .overlay-fin__boutons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espace-sm);
+  justify-content: center;
+}
+
+.btn-icone {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: var(--espace-xs);
 }
 
 .jeu-snake .scores-ui,

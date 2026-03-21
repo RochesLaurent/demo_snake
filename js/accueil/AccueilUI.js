@@ -1,3 +1,5 @@
+import SelecteurProfil from '../commun/SelecteurProfil.js';
+
 export default class AccueilUI {
   constructor(elementConteneur, routeur, registreJeux, gestionnaireProfils) {
     this._elementConteneur = elementConteneur;
@@ -82,8 +84,17 @@ export default class AccueilUI {
     };
 
     const btnProfils = this._element.querySelector('.btn--profils');
+    let selecteurActif = null;
     const gestionnaireProfils = () => {
-      alert('Gestion des profils — à implémenter');
+      if (selecteurActif) return;
+      selecteurActif = new SelecteurProfil(this._elementConteneur, this._gestionnaireProfils, {
+        modeGestion: true,
+        onFermer: () => {
+          selecteurActif.detruire();
+          selecteurActif = null;
+        },
+      });
+      selecteurActif.afficher();
     };
 
     this._element.addEventListener('click', gestionnaireClic);

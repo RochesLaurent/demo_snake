@@ -1,23 +1,30 @@
 export default class SnakeScoresUI {
   constructor(elementConteneur, depotScores, gestionnaireProfils, { surRetour } = {}) {
-    this._conteneur = elementConteneur;
-    this._depotScores = depotScores;
+    this._conteneur          = elementConteneur;
+    this._depotScores        = depotScores;
     this._gestionnaireProfils = gestionnaireProfils;
-    this._surRetour = surRetour ?? null;
-    this._element = null;
-    this._filtreActif = null;
+    this._surRetour          = surRetour ?? null;
+    this._overlay            = null;
+    this._element            = null;
+    this._filtreActif        = null;
   }
 
   afficher() {
+    this._overlay = document.createElement('div');
+    this._overlay.classList.add('modale-overlay');
+
     this._element = document.createElement('div');
-    this._element.classList.add('scores-ui');
-    this._conteneur.appendChild(this._element);
+    this._element.classList.add('modale-contenu', 'scores-ui');
+
+    this._overlay.appendChild(this._element);
+    this._conteneur.appendChild(this._overlay);
     this._rendu();
   }
 
   masquer() {
-    if (this._element) {
-      this._element.remove();
+    if (this._overlay) {
+      this._overlay.remove();
+      this._overlay = null;
       this._element = null;
     }
   }
@@ -39,7 +46,7 @@ export default class SnakeScoresUI {
         </thead>
         <tbody>${this._lignesScores(profils)}</tbody>
       </table>
-      <button class="btn btn--retour">Retour</button>
+      <button class="btn btn--secondaire btn--fermer">Fermer</button>
     `;
 
     this._element.querySelectorAll('.filtre-btn').forEach(btn => {
@@ -49,7 +56,7 @@ export default class SnakeScoresUI {
       });
     });
 
-    this._element.querySelector('.btn--retour').addEventListener('click', () => {
+    this._element.querySelector('.btn--fermer').addEventListener('click', () => {
       if (this._surRetour) this._surRetour();
     });
   }

@@ -1,23 +1,30 @@
 import InterfaceJeu from '../../commun/InterfaceJeu.js';
 import { ETATS_JEU } from '../../commun/constantes.js';
+import SelecteurProfil from '../../commun/SelecteurProfil.js';
 import Jeu from './Jeu.js';
 import SnakeUI from './ui/SnakeUI.js';
 
 export default class JeuSnake extends InterfaceJeu {
-  static ID = 'snake';
-  static NOM = 'Snake';
+  static ID          = 'snake';
+  static NOM         = 'Snake';
   static DESCRIPTION = 'Guidez le serpent, mangez et grandissez sans toucher les murs ni votre propre corps.';
-  static ICONE = '<img src="images/snake/snakeIcon.png" alt="Snake" class="carte-jeu__icone-img" />';
+  static ICONE       = '<img src="images/snake/snakeIcon.png" alt="Snake" class="carte-jeu__icone-img" />';
   static UTILISE_SCORES = true;
 
   constructor(elementConteneur, options = {}) {
     super(elementConteneur, options);
-    this._jeu = null;
-    this._ui = null;
-    this._wrapper = null;
+    this._jeu                 = null;
+    this._ui                  = null;
+    this._wrapper             = null;
+    this._gestionnaireProfils = null;
+    this._depotScores         = null;
+    this._selecteur           = null;
   }
 
   initialiser() {
+    this._gestionnaireProfils = this._options.gestionnaireProfils ?? null;
+    this._depotScores         = this._options.depotScores         ?? null;
+
     this._wrapper = document.createElement('div');
     this._wrapper.classList.add('jeu-snake');
     this._elementConteneur.appendChild(this._wrapper);
@@ -34,11 +41,9 @@ export default class JeuSnake extends InterfaceJeu {
       },
     });
 
-    const gestionnaireProfils = this._options.gestionnaireProfils ?? null;
-    const depotScores = this._options.depotScores ?? null;
-    const profilActif = gestionnaireProfils?.listerTous()[0] ?? null;
-
-    this._ui = new SnakeUI(this._wrapper, this._jeu, depotScores, profilActif, {
+    this._ui = new SnakeUI(this._wrapper, this._jeu, {
+      depotScores:         this._depotScores,
+      gestionnaireProfils: this._gestionnaireProfils,
       surRetourMenu: () => { window.location.hash = '#accueil'; },
       surRejouer: () => {
         this._changerEtat(ETATS_JEU.EN_COURS);
@@ -48,8 +53,21 @@ export default class JeuSnake extends InterfaceJeu {
   }
 
   demarrer() {
-    this._changerEtat(ETATS_JEU.EN_COURS);
-    this._ui.afficher();
+    this._selecteur = new SelecteurProfil(this._wrapper, this._gestionnaireProfils, {
+      titreBouton: 'Jouer',
+      onSelect: (profil) => {
+        this._selecteur.detruire();
+        this._selecteur = null;
+        this._changerEtat(ETATS_JEU.EN_COURS);
+        this._ui.definirProfil(profil);
+        this._ui.afficher();
+      },
+      onFermer: () => {
+        this._selecteur = null;
+        window.location.hash = '#accueil';
+      },
+    });
+    this._selecteur.afficher();
   }
 
   mettreEnPause() {
@@ -68,6 +86,10 @@ export default class JeuSnake extends InterfaceJeu {
   }
 
   detruire() {
+    if (this._selecteur) {
+      this._selecteur.detruire();
+      this._selecteur = null;
+    }
     if (this._ui) {
       this._ui.masquer();
       this._ui = null;

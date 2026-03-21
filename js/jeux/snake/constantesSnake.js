@@ -26,9 +26,6 @@ export const TOUCHES = {
   d: 'DROITE',
 };
 
-export const CLE_PROFILS = 'snake_profils';
-export const CLE_SCORES  = 'snake_scores';
-
 export const CSS_CELLULE         = 'cellule';
 export const CSS_CELLULE_SERPENT = 'cellule--serpent';
 export const CSS_CELLULE_TETE    = 'cellule--tete';

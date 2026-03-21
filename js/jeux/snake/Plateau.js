@@ -1,29 +1,30 @@
 import {
-  COLONNES, 
+  COLONNES,
   LIGNES,
-  CSS_CELLULE, 
-  CSS_CELLULE_SERPENT, 
-  CSS_CELLULE_TETE, 
-  CSS_CELLULE_NOURR
-} from '../constantes.js';
+  CSS_CELLULE,
+  CSS_CELLULE_SERPENT,
+  CSS_CELLULE_TETE,
+  CSS_CELLULE_NOURR,
+} from './constantesSnake.js';
 
 export default class Plateau {
   constructor(elementParent) {
     this.cellules = [];
-    const conteneur = document.createElement('div');
-    conteneur.id = 'plateau';
+    this._conteneur = document.createElement('div');
+    this._conteneur.id = 'plateau-snake';
+    this._conteneur.style.setProperty('--colonnes', COLONNES);
 
     for (let lig = 0; lig < LIGNES; lig++) {
       this.cellules[lig] = [];
       for (let col = 0; col < COLONNES; col++) {
         const cellule = document.createElement('div');
         cellule.classList.add(CSS_CELLULE);
-        conteneur.appendChild(cellule);
+        this._conteneur.appendChild(cellule);
         this.cellules[lig][col] = cellule;
       }
     }
 
-    elementParent.appendChild(conteneur);
+    elementParent.appendChild(this._conteneur);
   }
 
   mettreAJour(serpent, nourriture) {
@@ -37,7 +38,9 @@ export default class Plateau {
     }
 
     this.cellules[tete.lig][tete.col].classList.add(CSS_CELLULE_TETE);
-    this.cellules[nourriture.lig][nourriture.col].classList.add(CSS_CELLULE_NOURR);
+
+    const posNourr = nourriture.position;
+    this.cellules[posNourr.lig][posNourr.col].classList.add(CSS_CELLULE_NOURR);
   }
 
   effacer() {
@@ -47,5 +50,9 @@ export default class Plateau {
         cl.remove(CSS_CELLULE_SERPENT, CSS_CELLULE_TETE, CSS_CELLULE_NOURR);
       }
     }
+  }
+
+  detruire() {
+    this._conteneur.remove();
   }
 }

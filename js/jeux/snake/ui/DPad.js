@@ -11,10 +11,9 @@ export default class DPad {
     this._element.classList.add('dpad');
     this._element.innerHTML = `
       <button class="dpad__btn dpad__btn--haut"   aria-label="Haut">▲</button>
-      <div class="dpad__milieu">
-        <button class="dpad__btn dpad__btn--gauche" aria-label="Gauche">◀</button>
-        <button class="dpad__btn dpad__btn--droite" aria-label="Droite">▶</button>
-      </div>
+      <button class="dpad__btn dpad__btn--gauche"  aria-label="Gauche">◀</button>
+      <div class="dpad__centre"></div>
+      <button class="dpad__btn dpad__btn--droite"  aria-label="Droite">▶</button>
       <button class="dpad__btn dpad__btn--bas"    aria-label="Bas">▼</button>
     `;
 

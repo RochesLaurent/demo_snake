@@ -21,6 +21,7 @@ export default class SnakeUI {
     this._elBtnPause   = null;
     this._overlay      = null;
     this._dpad         = null;
+    this._zoneGrille   = null;
     this._estEnPause   = false;
   }
 
@@ -37,7 +38,15 @@ export default class SnakeUI {
     }
 
     this._creerHUD();
-    this._dpad = new DPad(this._conteneur, (dir) => this._jeu._onDirection(dir));
+
+    // Envelopper le plateau dans une zone relative pour le D-pad overlay
+    const plateau = this._conteneur.querySelector('#plateau-snake');
+    this._zoneGrille = document.createElement('div');
+    this._zoneGrille.classList.add('zone-grille');
+    plateau.parentNode.insertBefore(this._zoneGrille, plateau);
+    this._zoneGrille.appendChild(plateau);
+
+    this._dpad = new DPad(this._zoneGrille, (dir) => this._jeu._onDirection(dir));
     this._dpad.afficher();
     this._jeu.demarrer();
   }
@@ -55,6 +64,12 @@ export default class SnakeUI {
     if (this._dpad) {
       this._dpad.detruire();
       this._dpad = null;
+    }
+    if (this._zoneGrille) {
+      const plateau = this._zoneGrille.querySelector('#plateau-snake');
+      if (plateau) this._zoneGrille.before(plateau);
+      this._zoneGrille.remove();
+      this._zoneGrille = null;
     }
     this._estEnPause = false;
   }

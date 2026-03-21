@@ -38,7 +38,7 @@ Puis ouvrir [http://localhost:3000](http://localhost:3000) dans le navigateur.
 
 ## Déploiement
 
-Hébergé sur **Vercel** : *(lien à compléter)*
+Hébergé sur **Vercel** : [https://playgroundjs-smoky.vercel.app/](https://playgroundjs-smoky.vercel.app/)
 
 ```bash
 vercel        # première fois

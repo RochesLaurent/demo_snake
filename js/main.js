@@ -4,6 +4,7 @@ import DepotLocal from './commun/DepotLocal.js';
 import GestionnaireProfils from './profil/GestionnaireProfils.js';
 import DepotScores from './score/DepotScores.js';
 import AccueilUI from './accueil/AccueilUI.js';
+import JeuSnake from './jeux/snake/JeuSnake.js';
 
 const app = document.getElementById('app');
 const depotGlobal = DepotLocal.creerGlobal();
@@ -11,7 +12,7 @@ const gestionnaireProfils = new GestionnaireProfils(depotGlobal);
 const depotScores = new DepotScores(depotGlobal);
 
 const registreJeux = [
-  // import JeuSnake from './jeux/snake/JeuSnake.js'; → ajouté en phase 1
+  JeuSnake,
 ];
 
 const gestionnaireVues = new GestionnaireVues(app);
@@ -23,10 +24,25 @@ gestionnaireVues.enregistrerVue('accueil', () =>
 
 routeur.enregistrerRoute(
   'accueil',
-  () => gestionnaireVues.afficherVue('accueil')
+  () => gestionnaireVues.afficherVue('accueil'),
+  () => gestionnaireVues.masquerVueCourante()
 );
 
-// Les routes de jeux seront enregistrées ici au fil des phases :
-// routeur.enregistrerRoute('snake', () => gestionnaireVues.afficherVue('snake'));
+let jeuCourant = null;
+
+routeur.enregistrerRoute(
+  JeuSnake.ID,
+  () => {
+    jeuCourant = new JeuSnake(app, { depotScores, gestionnaireProfils });
+    jeuCourant.initialiser();
+    jeuCourant.demarrer();
+  },
+  () => {
+    if (jeuCourant) {
+      jeuCourant.detruire();
+      jeuCourant = null;
+    }
+  }
+);
 
 routeur.demarrer();

@@ -118,18 +118,30 @@
   to   { box-shadow: 0 0 10px rgba(233, 69, 96, 0.9); }
 }
 
+.zone-grille {
+  position: relative;
+}
+
+/* Layout par défaut : croix compacte (référence pour les petits mobiles) */
 .dpad {
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+    ". haut ."
+    "gauche centre droite"
+    ". bas .";
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto;
+  gap: var(--espace-md);
   justify-items: center;
-  gap: var(--espace-xs);
+  align-items: center;
   margin-top: var(--espace-sm);
 }
 
-.dpad__milieu {
-  display: flex;
-  gap: var(--espace-xs);
-}
+.dpad__btn--haut   { grid-area: haut; }
+.dpad__btn--gauche { grid-area: gauche; }
+.dpad__centre      { grid-area: centre; width: 56px; height: 56px; }
+.dpad__btn--droite { grid-area: droite; }
+.dpad__btn--bas    { grid-area: bas; }
 
 .dpad__btn {
   width: 56px;
@@ -147,7 +159,6 @@
   -webkit-user-select: none;
   touch-action: manipulation;
   transition: background-color var(--transition-rapide);
-  /* Cible tactile ≥ 48×48 px (WCAG) */
   min-width: 48px;
   min-height: 48px;
 }
@@ -155,6 +166,43 @@
 .dpad__btn:active {
   background-color: var(--couleur-accent);
   border-color: var(--couleur-accent);
+}
+
+/* Écrans tactiles : D-pad en overlay transparent sur toute la grille */
+@media (pointer: coarse) {
+  .dpad {
+    position: absolute;
+    inset: 0;
+    grid-template-areas:
+      ". haut ."
+      "gauche centre droite"
+      ". bas .";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 0;
+    margin: 0;
+    z-index: 5;
+  }
+
+  .dpad__centre { width: 100%; height: 100%; }
+
+  .dpad__btn {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 0;
+    font-size: clamp(1.5rem, 6vmin, 2.5rem);
+    color: rgba(255, 255, 255, 0.25);
+    min-width: unset;
+    min-height: unset;
+  }
+
+  .dpad__btn:active {
+    background: rgba(46, 204, 113, 0.18);
+    border-color: rgba(46, 204, 113, 0.3);
+    color: rgba(255, 255, 255, 0.8);
+  }
 }
 
 .jeu-snake .overlay-fin {
@@ -333,11 +381,14 @@
   color: var(--couleur-texte);
 }
 
-@media (min-width: 640px) {
+/* Masquer le D-pad uniquement quand un pointeur précis (souris) est disponible */
+@media (pointer: fine) {
   .dpad {
     display: none;
   }
+}
 
+@media (min-width: 640px) {
   .jeu-snake .hud {
     font-size: var(--taille-texte-base);
   }

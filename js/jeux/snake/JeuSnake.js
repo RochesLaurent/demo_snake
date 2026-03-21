@@ -1,17 +1,19 @@
 import InterfaceJeu from '../../commun/InterfaceJeu.js';
 import { ETATS_JEU } from '../../commun/constantes.js';
 import Jeu from './Jeu.js';
+import SnakeUI from './ui/SnakeUI.js';
 
 export default class JeuSnake extends InterfaceJeu {
   static ID = 'snake';
   static NOM = 'Snake';
   static DESCRIPTION = 'Guidez le serpent, mangez et grandissez sans toucher les murs ni votre propre corps.';
-  static ICONE = '🐍';
+  static ICONE = '<img src="images/snake/snakeIcon.png" alt="Snake" class="carte-jeu__icone-img" />';
   static UTILISE_SCORES = true;
 
   constructor(elementConteneur, options = {}) {
     super(elementConteneur, options);
     this._jeu = null;
+    this._ui = null;
     this._wrapper = null;
   }
 
@@ -23,17 +25,31 @@ export default class JeuSnake extends InterfaceJeu {
     this._jeu = new Jeu(this._wrapper, {
       surFinDePartie: (score, niveau) => {
         this._changerEtat(ETATS_JEU.TERMINE);
+        if (this._ui) this._ui.afficherFinDePartie(score, niveau);
         if (this.surFinDePartie) this.surFinDePartie(score, niveau);
       },
       surScoreChange: (score, niveau) => {
+        if (this._ui) this._ui.mettreAJourScore(score, niveau);
         if (this.surScoreChange) this.surScoreChange(score, niveau);
+      },
+    });
+
+    const gestionnaireProfils = this._options.gestionnaireProfils ?? null;
+    const depotScores = this._options.depotScores ?? null;
+    const profilActif = gestionnaireProfils?.listerTous()[0] ?? null;
+
+    this._ui = new SnakeUI(this._wrapper, this._jeu, depotScores, profilActif, {
+      surRetourMenu: () => { window.location.hash = '#accueil'; },
+      surRejouer: () => {
+        this._changerEtat(ETATS_JEU.EN_COURS);
+        this._jeu.demarrer();
       },
     });
   }
 
   demarrer() {
     this._changerEtat(ETATS_JEU.EN_COURS);
-    this._jeu.demarrer();
+    this._ui.afficher();
   }
 
   mettreEnPause() {
@@ -48,10 +64,14 @@ export default class JeuSnake extends InterfaceJeu {
 
   arreter() {
     this._changerEtat(ETATS_JEU.PRET);
-    this._jeu.arreter();
+    if (this._ui) this._ui.masquer();
   }
 
   detruire() {
+    if (this._ui) {
+      this._ui.masquer();
+      this._ui = null;
+    }
     if (this._jeu) {
       this._jeu.arreter();
       this._jeu = null;

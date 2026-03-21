@@ -7,7 +7,6 @@
   gap: var(--espace-2xl);
 }
 
-/* En-tête */
 
 .accueil__entete {
   text-align: center;
@@ -25,7 +24,6 @@
   font-size: var(--taille-texte-lg);
 }
 
-/* Grille de jeux */
 
 .accueil__grille {
   display: grid;
@@ -35,7 +33,6 @@
   max-width: 900px;
 }
 
-/* Carte de jeu */
 
 .carte-jeu {
   background-color: var(--couleur-surface);
@@ -70,6 +67,13 @@
   line-height: 1;
 }
 
+.carte-jeu__icone-img {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  display: block;
+}
+
 .carte-jeu__nom {
   font-size: var(--taille-texte-lg);
   color: var(--couleur-texte);
@@ -82,7 +86,6 @@
   line-height: 1.4;
 }
 
-/* Pied de page */
 
 .accueil__pied {
   margin-top: auto;
